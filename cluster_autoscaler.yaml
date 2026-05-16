@@ -7,6 +7,8 @@ metadata:
     k8s-app: cluster-autoscaler
   name: cluster-autoscaler
   namespace: kube-system
+  annotations:  
+    eks.amazonaws.com/role-arn: arn:aws:iam::086241318794:role/EKSServiceAccountRole
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -139,6 +141,7 @@ spec:
       annotations:
         prometheus.io/scrape: 'true'
         prometheus.io/port: '8085'
+        cluster-autoscaler.kubernetes.io/safe-to-evict: "false"
     spec:
       priorityClassName: system-cluster-critical
       securityContext:
@@ -149,8 +152,11 @@ spec:
           type: RuntimeDefault
       serviceAccountName: cluster-autoscaler
       containers:
-        - image: registry.k8s.io/autoscaling/cluster-autoscaler:v1.32.1
+        - image: registry.k8s.io/autoscaling/cluster-autoscaler:v1.35.0
           name: cluster-autoscaler
+          env:
+            - name: AWS_REGION
+              value: "eu-central-1"
           resources:
             limits:
               cpu: 100m
@@ -165,7 +171,9 @@ spec:
             - --cloud-provider=aws
             - --skip-nodes-with-local-storage=false
             - --expander=least-waste
-            - --node-group-auto-discovery=asg:tag=k8s.io/cluster-autoscaler/enabled,k8s.io/cluster-autoscaler/<YOUR CLUSTER NAME>
+            - --node-group-auto-discovery=asg:tag=k8s.io/cluster-autoscaler/enabled,k8s.io/cluster-autoscaler/eks-cluster-test
+            - --balance-similar-node-groups 
+            - --skip-nodes-with-system-pods=false  
           volumeMounts:
             - name: ssl-certs
               mountPath: /etc/ssl/certs/ca-certificates.crt # /etc/ssl/certs/ca-bundle.crt for Amazon Linux Worker Nodes
