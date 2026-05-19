@@ -2,15 +2,20 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: nginx
+  namespace: dev 
+  labels: 
+    app: nginx
 spec:
   selector:
     matchLabels:
       app: nginx
+      profile: fargate
   replicas: 1
   template:
     metadata:
       labels:
         app: nginx
+        profile: fargate
     spec:
       containers:
       - name: nginx
