@@ -25,4 +25,5 @@ this repository demonstrates running Kubernetes cluster on AWS, Autoscaling
 *chmod +x ./aws-iam-authenticator*<br>
 *mv ./aws-iam-authenticator /usr/local/bin* <br>
 
-
+- kubectl config file must be available in .kube directory inside jenkins home directory of the container:
+*docker cp config 174985fe61a0:/var/jenkins_home/.kube*
