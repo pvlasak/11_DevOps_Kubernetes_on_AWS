@@ -18,6 +18,7 @@ this repository demonstrates running Kubernetes cluster on AWS, Autoscaling
 - Auto-Scaler component communicates with auto-scaling group that is assigned to a node group collecting the EC2 instances, tags assigned to an auto-scaling group are used to identify an EKS cluster that is allowed to communicate with auto-scaling group. 
 
 ## Deploy to EKS Cluster from Jenkins Pipeline
+- **branch eks_jenkins**
 - install kubectl tool inside Jenkins container on Jenkins server: <br>
 *curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl; chmod +x ./kubectl; mv ./kubectl /usr/local/bin/kubectl*
 - install aws iam authenticator inside Jenkins container on Jenkins server: <br>
@@ -30,4 +31,9 @@ Execute command from jenkins server: *docker cp config 174985fe61a0:/var/jenkins
 
 - AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY defined as environmental variables in the Jenkinsfile. Jenkins holds credentials as secret text. 
 
-
+## Deploy on LKE Linode Cluster
+- **branch lke_jenkins**
+- after creating a cluter on LKE, the kubeconfig.yaml is available
+- In the Jenkins it is possible to create credentials as secret file and use this `kubeconfig.yaml` file. 
+- to authenticate on LKE cluster, it is necessary to install plugin called `Kubernetes CLI`
+- with block `withKubeConfig()` the authentication to LKE can be initiated before submitting *kubectl* command. 
