@@ -8,24 +8,29 @@ pipeline {
     stages {
         stage("init") {
             steps {
-                script {
-                    gv = load "script.groovy"
+                dir('java-maven-app') {
+                    script {
+                        gv = load "script.groovy"
+                    }
                 }
             }
         }
         stage("build jar") {
             steps {
-                script {
-                    gv.buildJar()
-
+                dir('java-maven-app') {
+                    script {
+                        gv.buildJar()
+                    }
                 }
             }
         }
 
         stage("build image") {
             steps {
-                script {
-                    gv.buildImage()
+                dir('java-maven-app') {
+                    script {
+                        gv.buildImage()
+                    }
                 }
             }
         }
@@ -36,9 +41,11 @@ pipeline {
                 AWS_SECRET_ACCESS_KEY = credentials('jenkins_aws_secret_access_key')
             }
             steps {
-                script {
-                    gv.deployApp()
-                    sh 'kubectl create deployment nginx-deployment --image=nginx'
+                dir('java-maven-app') {
+                    script {
+                        gv.deployApp()
+                        sh 'kubectl create deployment nginx-deployment --image=nginx'
+                    }
                 }
             }
         }               
