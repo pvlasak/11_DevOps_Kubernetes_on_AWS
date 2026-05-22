@@ -44,7 +44,9 @@ pipeline {
                 dir('java-maven-app') {
                     script {
                         gv.deployApp()
-                        sh 'kubectl create deployment nginx-deployment --image=nginx'
+                        withKubeConfig([credentialsId: 'lke-credentials', serverUrl: 'https://d2beca60-e4ec-43fe-8afc-8c38c2b5c440.eu-central-2-gw.linodelke.net']) {
+                            sh 'kubectl create deployment nginx-deployment --image=nginx'                       
+                        }
                     }
                 }
             }
