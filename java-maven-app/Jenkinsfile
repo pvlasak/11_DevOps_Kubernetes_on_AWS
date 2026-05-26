@@ -6,7 +6,8 @@ pipeline {
         maven 'Maven3.9'
     }
     environment {
-        DOCKER_REPO='petrdeveloper/demo-app'
+        DOCKER_REPO_SERVER="41318794.dkr.ecr.eu-central-1.amazonaws.com"
+        DOCKER_REPO="{DOCKER_REPO_SERVER}/java-maven-app"
     }
     stages {
         stage('increment version') {
