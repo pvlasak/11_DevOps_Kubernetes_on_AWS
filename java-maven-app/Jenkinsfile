@@ -69,6 +69,8 @@ pipeline {
                 dir('java-maven-app') {
                     script {
                         withCredentials([usernamePassword(credentialsId: 'github-username-token', passwordVariable: 'TOKEN', usernameVariable: 'USER')]){
+                            sh 'git config user.email "jenkins@example.com"'
+                            sh 'git config user.name "jenkins"'
                             sh "git remote set-url origin https://${USER}:${TOKEN}@github.com/pvlasak/11_DevOps_Kubernetes_on_AWS.git"
                             sh 'git add .'
                             sh 'git commit -m "ci: version bump"'
